@@ -47,6 +47,7 @@
         margin-bottom: 20px;
       }
       .graph-container {
+        margin-top: 50px;
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -76,13 +77,13 @@
 
     <!-- Content Wrapper -->
     <div class="container">
-      <div class="prediction-text">{{prediction_text}}</div>
       <div class="graph-container">
-        {% comment %} {% for graph in graphs %}
+        {% for graph in graphs %}
         <div class="graph">
           <img src="data:image/png;base64,{{ graph }}" alt="Graph" />
         </div>
-        {% endfor %} {% endcomment %}
+        {% endfor %}
+        <div class="prediction-text">{{prediction_text}}</div>
       </div>
     </div>
   </body>

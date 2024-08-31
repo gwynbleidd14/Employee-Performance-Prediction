@@ -5,6 +5,7 @@ import io
 import base64
 from flask import Flask, render_template, request
 import matplotlib.pyplot as plt
+from sklearn.calibration import LabelEncoder
 
 app = Flask(__name__)
 
@@ -44,9 +45,11 @@ def pred():
     month = request.form['month']
     
     # Preparing input for model
-    total = [[int(quarter), int(department), int(day), int(team),
-              float(targeted_productivity), float(smv), int(over_time), int(incentive),
-              float(idle_time), int(idle_men), int(no_of_style_change), float(no_of_workers), int(month)]]
+    total = [[int(quarter), int(LabelEncoder().fit_transform([department])[0]), 
+                  int(LabelEncoder().fit_transform([day])[0]), int(LabelEncoder().fit_transform([team])[0]),
+                  float(targeted_productivity), float(smv), int(over_time), int(incentive),
+                  float(idle_time), int(idle_men), int(no_of_style_change), float(no_of_workers), 
+                  int(LabelEncoder().fit_transform([month])[0])]]
     
     # Prediction
     prediction = model.predict(total)[0]  # Assuming this returns a scalar value
@@ -59,68 +62,68 @@ def pred():
     else:
         text = 'The employee is Highly Productive.'
 
-    # graphs = []
+    graphs = []
 
-    # # Bar chart
-    # plt.figure()
-    # categories = ['Targeted Productivity', 'SMV', 'Over Time', 'Idle Time']
-    # values = [targeted_productivity, smv, over_time, idle_time]
-    # plt.bar(categories, [float(v) for v in values], color=['blue', 'green', 'red', 'orange'])
-    # plt.xlabel('Parameters')
-    # plt.ylabel('Values')
-    # plt.title('Employee Productivity Parameters')
-    # buf = io.BytesIO()
-    # plt.savefig(buf, format='png')
-    # buf.seek(0)
-    # graph_image = base64.b64encode(buf.getvalue()).decode('utf-8')
-    # buf.close()
-    # graphs.append(graph_image)
-    # plt.close()
+    # Bar chart
+    plt.figure()
+    categories = ['Targeted Productivity', 'SMV', 'Over Time', 'Idle Time']
+    values = [targeted_productivity, smv, over_time, idle_time]
+    plt.bar(categories, [float(v) for v in values], color=['blue', 'green', 'red', 'orange'])
+    plt.xlabel('Parameters')
+    plt.ylabel('Values')
+    plt.title('Employee Productivity Parameters')
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    graph_image = base64.b64encode(buf.getvalue()).decode('utf-8')
+    buf.close()
+    graphs.append(graph_image)
+    plt.close()
 
-    # # Scatter plot
-    # plt.figure()
-    # plt.scatter([1, 2, 3, 4], [float(targeted_productivity), float(smv), float(over_time), float(idle_time)])
-    # plt.xlabel('Parameters')
-    # plt.ylabel('Values')
-    # plt.title('Scatter Plot of Employee Parameters')
-    # buf = io.BytesIO()
-    # plt.savefig(buf, format='png')
-    # buf.seek(0)
-    # graph_image = base64.b64encode(buf.getvalue()).decode('utf-8')
-    # buf.close()
-    # graphs.append(graph_image)
-    # plt.close()
+    # Scatter plot
+    plt.figure()
+    plt.scatter([1, 2, 3, 4], [float(targeted_productivity), float(smv), float(over_time), float(idle_time)])
+    plt.xlabel('Parameters')
+    plt.ylabel('Values')
+    plt.title('Scatter Plot of Employee Parameters')
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    graph_image = base64.b64encode(buf.getvalue()).decode('utf-8')
+    buf.close()
+    graphs.append(graph_image)
+    plt.close()
 
-    # # Pie chart
-    # plt.figure()
-    # sizes = [float(targeted_productivity), float(smv), float(over_time), float(idle_time)]
-    # labels = ['Targeted Productivity', 'SMV', 'Over Time', 'Idle Time']
-    # plt.pie(sizes, labels=labels, autopct='%1.1f%%')
-    # plt.title('Pie Chart of Employee Parameters')
-    # buf = io.BytesIO()
-    # plt.savefig(buf, format='png')
-    # buf.seek(0)
-    # graph_image = base64.b64encode(buf.getvalue()).decode('utf-8')
-    # buf.close()
-    # graphs.append(graph_image)
-    # plt.close()
+    # Pie chart
+    plt.figure()
+    sizes = [float(targeted_productivity), float(smv), float(over_time), float(idle_time)]
+    labels = ['Targeted Productivity', 'SMV', 'Over Time', 'Idle Time']
+    plt.pie(sizes, labels=labels, autopct='%1.1f%%')
+    plt.title('Pie Chart of Employee Parameters')
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    graph_image = base64.b64encode(buf.getvalue()).decode('utf-8')
+    buf.close()
+    graphs.append(graph_image)
+    plt.close()
 
-    # # Histogram
-    # plt.figure()
-    # data = np.random.randn(100)
-    # plt.hist(data, bins=20, color='purple')
-    # plt.xlabel('Random Data')
-    # plt.ylabel('Frequency')
-    # plt.title('Histogram of Random Data')
-    # buf = io.BytesIO()
-    # plt.savefig(buf, format='png')
-    # buf.seek(0)
-    # graph_image = base64.b64encode(buf.getvalue()).decode('utf-8')
-    # buf.close()
-    # graphs.append(graph_image)
-    # plt.close()
+    # Histogram
+    plt.figure()
+    data = np.random.randn(100)
+    plt.hist(data, bins=20, color='purple')
+    plt.xlabel('Random Data')
+    plt.ylabel('Frequency')
+    plt.title('Histogram of Random Data')
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    graph_image = base64.b64encode(buf.getvalue()).decode('utf-8')
+    buf.close()
+    graphs.append(graph_image)
+    plt.close()
 
-    return render_template('submit.html', prediction_text = text)
+    return render_template('submit.html', prediction_text = text, graphs = graphs)
 
 if __name__ == "__main__":
     app.run(debug=True)
