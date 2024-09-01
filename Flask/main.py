@@ -3,9 +3,9 @@ import requests
 import pickle
 import io
 import base64
-from flask import Flask, render_template, request
 import matplotlib.pyplot as plt
 from sklearn.calibration import LabelEncoder
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
