@@ -1,14 +1,14 @@
 {
   "builds": [
     {
-      "src": "Flask/Templates/**/*",
+      "src": "Flask/templates/**/*",
       "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "Flask/Templates/$1"
+      "dest": "Flask/templates/$1"
     }
   ]
 }
