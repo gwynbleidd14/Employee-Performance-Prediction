@@ -9,7 +9,7 @@ from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
-model = pickle.load(open("IBM Files\model_xgb.pkl", "rb"))
+model = pickle.load(open("Model Files\model_xgb.pkl", "rb"))
 
 @app.route("/")
 def home():
